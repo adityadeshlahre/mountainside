@@ -14,7 +14,7 @@
     "start": "pnpm db:generate && pnpm db:push && pnpm db:deploy"
   },
   "dependencies": {
-    "@prisma/client": "^6.5.0",
+    "@prisma/client": "^6.7.0",
     "dotenv": "^16.4.7"
   },
   "devDependencies": {
