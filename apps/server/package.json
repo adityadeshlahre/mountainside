@@ -1,0 +1,36 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "esbuild ./src/index.ts --bundle --platform=node --outfile=dist/index.js",
+    "start": "esbuild ./src/index.ts --bundle --platform=node --outfile=dist/index.js && node ./dist/index.js",
+    "dev": "nodemon --watch src --ext ts --exec ts-node src/index.ts",
+    "clean": "rimraf dist",
+    "lint": "eslint src/"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.23.0",
+    "@repo/eslint-config": "workspace:*",
+    "@repo/types": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@types/body-parser": "^1.19.5",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.1",
+    "@types/node": "^22.13.14",
+    "@typescript-eslint/eslint-plugin": "^8.28.0",
+    "@typescript-eslint/parser": "^8.28.0",
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
+    "esbuild": "^0.25.1",
+    "eslint": "^9.23.0",
+    "express": "^4.21.2",
+    "globals": "^16.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2",
+    "typescript-eslint": "^8.28.0"
+  },
+  "dependencies": {
+    "@repo/db": "workspace:*"
+  }
+}

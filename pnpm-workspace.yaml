@@ -1,0 +1,12 @@
+packages:
+  - apps/*
+  - packages/*
+onlyBuiltDependencies:
+  - '@prisma/client'
+  - '@prisma/engines'
+  - '@swc/core'
+  - bufferutil
+  - core-js-pure
+  - esbuild
+  - prisma
+  - utf-8-validate

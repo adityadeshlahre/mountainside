@@ -1,0 +1,38 @@
+{
+  "name": "ws",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "esbuild ./src/index.ts --bundle --platform=node --outfile=dist/index.js",
+    "start": "esbuild ./src/index.ts --bundle --platform=node --outfile=dist/index.js && node ./dist/index.js",
+    "dev": "nodemon --watch src --ext ts --exec ts-node src/index.ts",
+    "clean": "rimraf dist",
+    "lint": "eslint src/",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.26.0",
+    "@babel/preset-typescript": "^7.26.0",
+    "@eslint/js": "^9.18.0",
+    "@repo/eslint-config": "workspace:*",
+    "@repo/types": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@types/jest": "^29.5.14",
+    "@typescript-eslint/eslint-plugin": "^8.20.0",
+    "@typescript-eslint/parser": "^8.20.0",
+    "babel-jest": "^29.7.0",
+    "esbuild": "^0.24.2",
+    "eslint": "^9.18.0",
+    "globals": "^15.14.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.20.0"
+  },
+  "dependencies": {
+    "@repo/db": "workspace:*",
+    "@types/ws": "^8.5.13",
+    "ws": "^8.18.0"
+  }
+}

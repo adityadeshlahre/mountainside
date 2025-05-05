@@ -1,0 +1,82 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: ./apps/web/Dockerfile.prod
+    container_name: websocket-quick-start-web-prod
+    expose:
+      - 5173
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./apps/web/:/app/apps/web
+    environment:
+      - DATABASE_URL=postgresql://opensource:sourceopen@postgres:5432/fasoshop
+      - PORT=3000
+      - UI_PORT=5173
+    depends_on:
+      - postgres
+    networks:
+      - app_network
+
+  server:
+    build:
+      context: .
+      dockerfile: ./apps/server/Dockerfile.prod
+    container_name: websocket-quick-start-server-prod
+    expose:
+      - 3000
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./apps/server/:/app/apps/server
+    environment:
+      - DATABASE_URL=postgresql://opensource:sourceopen@postgres:5432/fasoshop
+      - PORT=3000
+      - UI_PORT=5173
+    depends_on:
+      - postgres
+    networks:
+      - app_network
+
+  ws:
+    build:
+      context: .
+      dockerfile: ./apps/ws/Dockerfile.prod
+    container_name: websocket-quick-start-ws-prod
+    expose:
+      - 8080
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./apps/server/:/app/apps/server
+    environment:
+      - DATABASE_URL=postgresql://opensource:sourceopen@postgres:5432/fasoshop
+      - PORT=8080
+      - UI_PORT=5173
+    depends_on:
+      - postgres
+    networks:
+      - app_network
+
+  postgres:
+    image: postgres:latest
+    container_name: fasoshop
+    environment:
+      POSTGRES_USER: opensource
+      POSTGRES_PASSWORD: sourceopen
+      POSTGRES_DB: fasoshop
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app_network
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  app_network:
+    driver: bridge

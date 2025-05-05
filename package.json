@@ -1,0 +1,44 @@
+{
+  "name": "websocket-quick-start",
+  "private": true,
+  "scripts": {
+    "build": "turbo build",
+    "dev:web": "turbo run dev --filter=web",
+    "dev:server": "turbo run dev --filter=server",
+    "dev": "turbo run dev",
+    "dev:docker": "docker compose -f dev.docker-compose.yml up -d",
+    "dev:docker:build": "docker compose -f dev.docker-compose.yml build",
+    "docker:build": "docker-compose -f docker-compose.yml build && docker compose -f dev.docker-compose.yml build",
+    "lint": "turbo lint",
+    "db:generate": "pnpx prisma generate --schema=./packages/db/prisma/schema.prisma",
+    "db:studio": "pnpx prisma studio --schema=./packages/db/prisma/schema.prisma",
+    "db:push": "pnpx prisma db push --schema=./packages/db/prisma/schema.prisma --skip-generate --accept-data-loss",
+    "db:migrate": "pnpx prisma migrate dev --schema=./packages/db/prisma/schema.prisma",
+    "db:reset": "pnpx prisma migrate reset --schema=./packages/db/prisma/schema.prisma --force",
+    "db:resolve": "pnpx prisma migrate resolve --schema=./packages/db/prisma/schema.prisma --applied 20240906204550_init",
+    "db:deploy": "pnpx prisma migrate deploy --schema=./packages/db/prisma/schema.prisma",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "clean": "rimraf ./node_modules ./packages/ui/node_modules ./apps/ws/node_modules ./apps/server/node_modules ./apps/server/dist ./apps/web/node_modules ./apps/web/dist ./apps/ws/dist ./packages/db/node_modules ./packages/types/node_modules ./packages/tailwind-config/node_modules ./packages/eslint-config/node_modules",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.8.0",
+    "@commitlint/config-conventional": "^19.8.0",
+    "autoprefixer": "^10.4.21",
+    "eslint": "^9.23.0",
+    "husky": "^9.1.7",
+    "postcss": "^8.5.3",
+    "prettier": "^3.5.3",
+    "rimraf": "^6.0.1",
+    "tailwindcss": "^3.4.17",
+    "turbo": "^2.4.4",
+    "typescript": "^5.8.2"
+  },
+  "packageManager": "pnpm@10.7.0",
+  "engines": {
+    "node": ">=23"
+  },
+  "lint-staged": {
+    "**/*.{js,jsx,ts,tsx}": "eslint . --fix"
+  }
+}
