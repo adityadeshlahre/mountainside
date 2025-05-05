@@ -336,6 +336,12 @@ importers:
 
   packages/types:
     dependencies:
+      '@types/ws':
+        specifier: ^8.5.13
+        version: 8.18.1
+      ws:
+        specifier: ^8.18.0
+        version: 8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       zod:
         specifier: ^3.24.2
         version: 3.24.2

@@ -25,6 +25,7 @@ export default [
       eqeqeq: 'warn',
       curly: 'warn',
       'no-console': 'warn',
+      "@typescript-eslint/no-explicit-any" : "warn",
       'no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': [
         'warn',

@@ -1,22 +1,39 @@
 import { WebSocket, WebSocketServer } from "ws";
+import { RoomMap } from "@repo/types/index";
+import { MessageType } from "./constants";
+import { handleJoin } from "./handle/handleJoin";
+import { handleMessageRouter } from "./handle/handleMessageRouter";
 
 const wss = new WebSocketServer({ port: 8080 });
 
+const roomMap: RoomMap = new Map();
+
 wss.on("connection", (ws: WebSocket) => {
+  // @ts-expect-error prefer-const
+  let currentRoomRef = { current: null };
+
   ws.on("error", (err) => {
     console.error("WebSocket error", err);
   });
-
-  ws.on("message", (message: string) => {
-    console.log("Received message:", message);
-    ws.send(`Echo: ${message}`);
+  ws.on("message", (rawMessage) => {
+    const message = JSON.parse(rawMessage.toString());
+    handleMessageRouter({
+      ws,
+      message,
+      roomMap,
+      currentRoomRef,
+    });
   });
 
   ws.on("close", () => {
-    console.log("WebSocket connection closed");
+    console.log("Connection closed");
+    // Remove ws from roomMap when the connection closes
+    if (currentRoomRef.current) {
+      const roomClients = roomMap.get(currentRoomRef.current);
+      roomClients?.delete(ws);
+    }
   });
 });
-
 wss.on("listening", () => {
   const address = wss.address();
   if (address && typeof address === "object") {
