@@ -29,7 +29,7 @@
     "@repo/eslint-config": "workspace:*",
     "@repo/tailwind-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
-    "@turbo/gen": "^2.4.4",
+    "@turbo/gen": "^2.5.2",
     "@types/eslint": "^9.6.1",
     "@types/node": "^22.13.14",
     "@types/react": "^19.0.12",
