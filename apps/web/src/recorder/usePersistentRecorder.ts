@@ -30,9 +30,6 @@ const usePersistentRecorder = (
       videoBitsPerSecond: 5_000_000, // Full HD bitrate
     });
 
-    console.log(recorder);
-    console.log(typeof recorder);
-
     recorder.ondataavailable = async (event) => {
       if (event.data.size > 0) {
         const tx = db.transaction(STORE_NAME, "readwrite");
@@ -57,26 +54,29 @@ const usePersistentRecorder = (
   };
 
   const exportChunks = async () => {
-    const db = await openDB(DB_NAME, 1, {
+    const db = await openDB(DB_NAME, 2, {
       upgrade(db) {
         if (!db.objectStoreNames.contains(STORE_NAME)) {
-          db.createObjectStore(STORE_NAME, {
+          const store = db.createObjectStore(STORE_NAME, {
             keyPath: "id",
             autoIncrement: true,
           });
+          store.createIndex("sessionId", "sessionId", { unique: false });
+        } else {
+          const store = db
+            .transaction(STORE_NAME, "versionchange")
+            .objectStore(STORE_NAME);
+          if (!store.indexNames.contains("sessionId")) {
+            store.createIndex("sessionId", "sessionId", { unique: false });
+          }
         }
       },
     });
 
-    const store = db
-      .transaction(STORE_NAME, "readonly")
-      .objectStore(STORE_NAME);
-
-    // Get all chunks for the given session ID
-    const chunks = await store.getAll();
-    const sessionChunks = chunks.filter(
-      (chunk) => chunk.sessionId === sessionId
-    );
+    const tx = db.transaction(STORE_NAME, "readonly");
+    const store = tx.objectStore(STORE_NAME);
+    const index = store.index("sessionId");
+    const sessionChunks = await index.getAll(IDBKeyRange.only(sessionId));
 
     if (sessionChunks.length === 0) {
       console.log("No chunks found for this session.");
@@ -85,21 +85,55 @@ const usePersistentRecorder = (
 
     // Iterate over the chunks and create download links for each one
     sessionChunks.forEach((chunk, index) => {
-      const fileName = `video_chunk_${sessionId}_${index}.webm`;
-
-      // Create a Blob from the chunk data
-      const blob = new Blob([chunk.chunk], { type: "video/webm" });
-
-      // Create an anchor element to trigger download
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = fileName;
-
-      // Trigger download programmatically
-      link.click();
+      setTimeout(() => {
+        const fileName = `video_chunk_${sessionId}_${index}.webm`;
+        const blob = new Blob([chunk.chunk], { type: "video/webm" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }, index * 200);
     });
 
     console.log("Chunks exported successfully!");
+  };
+
+  const exportMergedVideo = async () => {
+    const db = await openDB(DB_NAME, 2);
+    const tx = db.transaction(STORE_NAME, "readonly");
+    const store = tx.objectStore(STORE_NAME);
+    const index = store.index("sessionId");
+    const sessionChunks = await index.getAll(IDBKeyRange.only(sessionId));
+
+    if (sessionChunks.length === 0) {
+      console.log("No chunks found for this session.");
+      return;
+    }
+
+    // Sort chunks by timestamp if necessary
+    const sortedChunks = sessionChunks.sort(
+      (a, b) => a.timestamp - b.timestamp
+    );
+
+    // Extract Blob parts
+    const blobParts = sortedChunks.map((chunk) =>
+      chunk.chunk instanceof Blob ? chunk.chunk : new Blob([chunk.chunk])
+    );
+
+    // Merge all chunks into one Blob
+    const mergedBlob = new Blob(blobParts, { type: "video/webm" });
+
+    // Trigger download
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(mergedBlob);
+    link.download = `full_recording_${sessionId}.webm`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    console.log("Merged video downloaded successfully!");
   };
 
   return {
@@ -107,6 +141,7 @@ const usePersistentRecorder = (
     stopRecording,
     isRecording,
     exportChunks,
+    exportMergedVideo,
   };
 };
 

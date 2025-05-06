@@ -2,14 +2,20 @@ import { useEffect, useState } from "react";
 import { useWebRTC } from "../lib/webRTCService";
 import { v4 as uuidv4 } from "uuid";
 import usePersistentRecorder from "../recorder/usePersistentRecorder";
+import { uploadChunksToServer } from "../chunks_uploader/videoUploader";
 
 const VideoChat = () => {
   const { handleJoin, loading } = useWebRTC();
   const [roomCode, setRoomCode] = useState<string>();
   const [mediaStream, setMediaStream] = useState<MediaStream | null>(null);
   const [sessionId, setSessionId] = useState<string>("");
-  const { startRecording, stopRecording, exportChunks, isRecording } =
-    usePersistentRecorder(mediaStream, sessionId);
+  const {
+    startRecording,
+    stopRecording,
+    exportChunks,
+    exportMergedVideo,
+    isRecording,
+  } = usePersistentRecorder(mediaStream, sessionId);
 
   useEffect(() => {
     const handleDisconnect = () => {
@@ -130,15 +136,23 @@ const VideoChat = () => {
         start
       </button>
       <button
-        onClick={stopRecording}
+        onClick={async () => {
+          stopRecording();
+          await uploadChunksToServer(sessionId);
+        }}
         disabled={!isRecording}
         className="bg-blue-500 text-white p-2 rounded"
       >
         stop
       </button>
       <button
+        onClick={exportMergedVideo}
+        className="bg-blue-500 text-white p-2 rounded"
+      >
+        exportMergedVideo
+      </button>
+      <button
         onClick={exportChunks}
-        disabled={!isRecording}
         className="bg-blue-500 text-white p-2 rounded"
       >
         Export
