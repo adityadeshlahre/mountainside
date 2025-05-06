@@ -1,5 +1,6 @@
 import { WebSocket } from "ws";
 import { RoomMap } from "@repo/types";
+import { MessageType } from "@repo/common/constants";
 
 export function handleCandidate(
   ws: WebSocket,
@@ -12,7 +13,9 @@ export function handleCandidate(
   if (clients) {
     for (const client of clients) {
       if (client !== ws && client.readyState === WebSocket.OPEN) {
-        client.send(JSON.stringify({ type: "candidate", data: candidate }));
+        client.send(
+          JSON.stringify({ type: MessageType.ICE_CANDIDATE, data: candidate })
+        );
       }
     }
   }

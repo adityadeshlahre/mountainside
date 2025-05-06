@@ -7,4 +7,7 @@ export const enum MessageType {
   USER_JOINED = "user-joined",
   USER_LEFT = "user-left",
   ERROR = "error",
+  PING = "ping",
+  PONG = "pong",
+  ROOM_READY = "room-ready",
 }

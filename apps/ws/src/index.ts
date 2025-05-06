@@ -1,22 +1,22 @@
 import { WebSocket, WebSocketServer } from "ws";
 import { RoomMap } from "@repo/types/index";
-import { MessageType } from "./constants";
-import { handleJoin } from "./handle/handleJoin";
 import { handleMessageRouter } from "./handle/handleMessageRouter";
+import { MessageType } from "@repo/common/constants";
 
 const wss = new WebSocketServer({ port: 8080 });
 
 const roomMap: RoomMap = new Map();
 
 wss.on("connection", (ws: WebSocket) => {
-  // @ts-expect-error prefer-const
   let currentRoomRef = { current: null };
 
   ws.on("error", (err) => {
     console.error("WebSocket error", err);
   });
+
   ws.on("message", (rawMessage) => {
     const message = JSON.parse(rawMessage.toString());
+    console.log("Received message:", message);
     handleMessageRouter({
       ws,
       message,
@@ -27,13 +27,17 @@ wss.on("connection", (ws: WebSocket) => {
 
   ws.on("close", () => {
     console.log("Connection closed");
-    // Remove ws from roomMap when the connection closes
-    if (currentRoomRef.current) {
-      const roomClients = roomMap.get(currentRoomRef.current);
+    const room = currentRoomRef.current;
+    if (room && roomMap.has(room)) {
+      const roomClients = roomMap.get(room);
       roomClients?.delete(ws);
+      if (roomClients?.size === 0) {
+        roomMap.delete(room);
+      }
     }
   });
 });
+
 wss.on("listening", () => {
   const address = wss.address();
   if (address && typeof address === "object") {

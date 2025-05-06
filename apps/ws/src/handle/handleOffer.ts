@@ -1,5 +1,6 @@
 import { WebSocket } from "ws";
 import { RoomMap } from "@repo/types";
+import { MessageType } from "@repo/common/constants";
 
 export function handleOffer(
   ws: WebSocket,
@@ -12,7 +13,7 @@ export function handleOffer(
   if (clients) {
     for (const client of clients) {
       if (client !== ws && client.readyState === WebSocket.OPEN) {
-        client.send(JSON.stringify({ type: "offer", data: offer }));
+        client.send(JSON.stringify({ type: MessageType.OFFER, data: offer }));
       }
     }
   }

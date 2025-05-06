@@ -5,6 +5,7 @@ import { handleAnswer } from "./handleAnswer";
 import { handleCandidate } from "./handleCandidate";
 import { handleLeave } from "./handleLeave";
 import { handleOffer } from "./handleOffer";
+import { MessageType } from "@repo/common/constants";
 
 interface MessagePayload {
   type: string;
@@ -20,10 +21,19 @@ type handlerFucntion = (
 ) => void;
 
 const handlers: Record<string, handlerFucntion> = {
+  ping: (ws, message) => {
+    ws.send(
+      JSON.stringify({
+        type: MessageType.PONG,
+        room: message.room,
+      })
+    );
+  },
+
   join: (ws, message, roomMap, currentRoomRef) => {
-    if (message.room) {
-      currentRoomRef.current = message.room;
-      handleJoin({ ws, room: message.room!, roomMap });
+    if (message.data.room) {
+      currentRoomRef.current = message.data.room;
+      handleJoin({ ws, room: message.data.room!, roomMap, currentRoomRef });
     }
   },
 
@@ -75,4 +85,12 @@ export function handleMessageRouter({
       }
     }
   }
+}
+
+export function isRoomReady(roomMap: RoomMap, roomId: string): boolean {
+  const clients = roomMap.get(roomId);
+  if (clients && clients.size === 2) {
+    return true;
+  }
+  return false;
 }

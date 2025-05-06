@@ -1,5 +1,6 @@
 import { WebSocket } from "ws";
 import { RoomMap } from "@repo/types";
+import { MessageType } from "@repo/common/constants";
 
 export function handleLeave(
   ws: WebSocket,
@@ -15,7 +16,9 @@ export function handleLeave(
       // Notify others in the room that a peer has left
       for (const client of clients) {
         if (client.readyState === WebSocket.OPEN) {
-          client.send(JSON.stringify({ type: "leave", data: message.data }));
+          client.send(
+            JSON.stringify({ type: MessageType.LEAVE, data: message.data })
+          );
         }
       }
       // If the room is empty, delete it from the map

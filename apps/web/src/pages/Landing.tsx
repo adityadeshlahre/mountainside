@@ -1,5 +1,6 @@
 import { Button } from "@repo/ui/button";
 import React from "react";
+import VideoChat from "../components/VideoChat";
 
 const Landing: React.FC = () => {
   return (
@@ -11,6 +12,7 @@ const Landing: React.FC = () => {
       >
         CLICK
       </Button>
+      <VideoChat />
     </>
   );
 };
