@@ -4,7 +4,7 @@ import { openDB } from "idb";
 const DB_NAME = "video-recording-db";
 const STORE_NAME = "chunks";
 
-export const uploadChunksToServer = async (sessionId: string) => {
+export const uploadVideoChunksToServer = async (sessionId: string) => {
   const db = await openDB(DB_NAME, 2);
   const tx = db.transaction(STORE_NAME, "readonly");
   const store = tx.objectStore(STORE_NAME);
@@ -16,15 +16,37 @@ export const uploadChunksToServer = async (sessionId: string) => {
 
   for (const chunk of sessionChunks) {
     const formData = new FormData();
-    formData.append("file", chunk.chunk, `chunk-${chunk.timestamp}.webm`);
+    formData.append(
+      "file",
+      chunk.chunk,
+      `chunk-${sessionId}-${chunk.timestamp}.webm`
+    );
     formData.append("sessionId", chunk.sessionId);
 
-    await axios.post("/api/upload", formData, {
+    await axios.post(`http://localhost:3000/api/savevideo`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     });
   }
+};
 
-  console.log("Upload complete.");
+export const uploadVideoChunksTocloudinary = async (sessionId: string) => {
+  try {
+    const response = await axios.post(
+      `http://localhost:3000/api/upload`,
+      {
+        sessionId,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    console.log("Upload response:", response.data);
+  } catch (error) {
+    console.error("Error uploading video chunks to Cloudinary:", error);
+  }
 };

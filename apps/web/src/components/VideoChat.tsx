@@ -2,7 +2,10 @@ import { useEffect, useState } from "react";
 import { useWebRTC } from "../lib/webRTCService";
 import { v4 as uuidv4 } from "uuid";
 import usePersistentRecorder from "../recorder/usePersistentRecorder";
-import { uploadChunksToServer } from "../chunks_uploader/videoUploader";
+import {
+  uploadVideoChunksTocloudinary,
+  uploadVideoChunksToServer,
+} from "../chunks_uploader/videoUploader";
 
 const VideoChat = () => {
   const { handleJoin, loading } = useWebRTC();
@@ -136,10 +139,7 @@ const VideoChat = () => {
         start
       </button>
       <button
-        onClick={async () => {
-          stopRecording();
-          await uploadChunksToServer(sessionId);
-        }}
+        onClick={stopRecording}
         disabled={!isRecording}
         className="bg-blue-500 text-white p-2 rounded"
       >
@@ -156,6 +156,22 @@ const VideoChat = () => {
         className="bg-blue-500 text-white p-2 rounded"
       >
         Export
+      </button>
+      <button
+        onClick={async () => {
+          await uploadVideoChunksToServer(sessionId);
+        }}
+        className="bg-blue-500 text-white p-2 rounded"
+      >
+        save video (local)
+      </button>
+      <button
+        onClick={async () => {
+          await uploadVideoChunksTocloudinary(sessionId);
+        }}
+        className="bg-blue-500 text-white p-2 rounded"
+      >
+        upload video (cloud)
       </button>
       {isRecording && (
         <p className="text-green-500 mt-2">Recording has started!</p>

@@ -1,8 +1,12 @@
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
+import fs from "fs";
+import path from "path";
 import { User, UserSchema } from "@repo/types";
 import { prisma } from "@repo/db";
+import { updload } from "./multer/multer.middleware";
+import { uploadOnCloudinary } from "./utils/cloudinary";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -63,6 +67,82 @@ app.get("/users", async (req: express.Request, res: express.Response) => {
   }
 });
 
+app.post(
+  "/api/savevideo",
+  updload.single("file"),
+  async (req: express.Request, res: express.Response) => {
+    try {
+      const file = req.file;
+
+      if (!file) {
+        res.status(400).json({ error: "No file received" });
+        return;
+      }
+
+      res.status(200).json({
+        message: "Video saved successfully",
+        filename: file.filename,
+        path: file.path,
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: "Error saving video" });
+    }
+  }
+);
+
+app.post(
+  "/api/upload",
+  async (req: express.Request, res: express.Response): Promise<any> => {
+    try {
+      const { sessionId } = req.body;
+      console.log("sessionId", sessionId);
+
+      if (!sessionId) {
+        return res.status(400).json({ error: "Missing sessionId" });
+      }
+
+      const videoDir = path.join(__dirname, "./videos/");
+      const files = fs.readdirSync(videoDir);
+
+      const sessionChunks = files.filter((file) =>
+        file.includes(`chunk-${sessionId}`)
+      );
+
+      if (sessionChunks.length === 0) {
+        return res
+          .status(404)
+          .json({ error: "No chunks found for this session" });
+      }
+
+      const results = [];
+
+      const uploadPromises = sessionChunks.map(async (filename) => {
+        const fullPath = path.join(videoDir, filename);
+        if (!fs.existsSync(fullPath)) {
+          console.warn(`File does not exist: ${fullPath}`);
+          return null;
+        }
+        const uploadResult = await uploadOnCloudinary(fullPath, sessionId);
+        return { filename, uploadResult };
+      });
+
+      const uploadResults = await Promise.all(uploadPromises);
+      results.push(...uploadResults.filter((result) => result !== null));
+
+      res.status(200).json({
+        message: "File uploaded successfully",
+        cloudinary: results,
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: "Error uploading file" });
+    }
+  }
+);
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
+
+// race condition fix needed but working for now

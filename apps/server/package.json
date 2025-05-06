@@ -17,6 +17,7 @@
     "@types/body-parser": "^1.19.5",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.1",
+    "@types/multer": "^1.4.12",
     "@types/node": "^22.13.14",
     "@typescript-eslint/eslint-plugin": "^8.28.0",
     "@typescript-eslint/parser": "^8.28.0",
@@ -31,6 +32,9 @@
     "typescript-eslint": "^8.28.0"
   },
   "dependencies": {
-    "@repo/db": "workspace:*"
+    "@repo/db": "workspace:*",
+    "cloudinary": "^2.6.1",
+    "dotenv": "^16.4.7",
+    "multer": "1.4.5-lts.2"
   }
 }
