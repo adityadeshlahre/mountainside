@@ -25,7 +25,7 @@
     "cors": "^2.8.5",
     "esbuild": "^0.25.1",
     "eslint": "^9.23.0",
-    "express": "^4.21.2",
+    "express": "^5.1.0",
     "globals": "^16.0.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.2",
