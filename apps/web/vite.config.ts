@@ -12,6 +12,6 @@ export default defineConfig({
   preview: {
     host: "0.0.0.0",
     port: 8080,
-    allowedHosts: ["websocket-quick-start-web.onrender.com"],
+    allowedHosts: ["mountainside-quick-start-web.onrender.com"],
   },
 });

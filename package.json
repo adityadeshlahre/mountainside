@@ -1,5 +1,5 @@
 {
-  "name": "websocket-quick-start",
+  "name": "mountainside",
   "private": true,
   "scripts": {
     "build": "turbo build",

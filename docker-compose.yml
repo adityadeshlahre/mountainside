@@ -3,8 +3,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: websocket-quick-start-full:latest
-    container_name: websocket-quick-start-full
+    image: mountainside-quick-start-full:latest
+    container_name: mountainside-quick-start-full
     expose:
       - 3000
       - 5173

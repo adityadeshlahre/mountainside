@@ -18,7 +18,7 @@ const uploadOnCloudinary = async (
     const response = await new Promise((resolve, reject) => {
       cloudinary.uploader.upload(
         localFilePath,
-        { resource_type: "video", folder: folderName },
+        { resource_type: "video", folder: `chunks/${folderName}` },
         (error, result) => {
           if (error) {
             console.error("Error uploading to Cloudinary:", error);

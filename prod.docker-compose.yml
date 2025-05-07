@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: ./apps/web/Dockerfile.prod
-    container_name: websocket-quick-start-web-prod
+    container_name: mountainside-quick-start-web-prod
     expose:
       - 5173
     ports:
@@ -23,7 +23,7 @@ services:
     build:
       context: .
       dockerfile: ./apps/server/Dockerfile.prod
-    container_name: websocket-quick-start-server-prod
+    container_name: mountainside-quick-start-server-prod
     expose:
       - 3000
     ports:
@@ -43,7 +43,7 @@ services:
     build:
       context: .
       dockerfile: ./apps/ws/Dockerfile.prod
-    container_name: websocket-quick-start-ws-prod
+    container_name: mountainside-quick-start-ws-prod
     expose:
       - 8080
     ports:

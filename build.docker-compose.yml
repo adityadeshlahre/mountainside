@@ -5,8 +5,8 @@ services:
       dockerfile: ./apps/web/Dockerfile.build
       args:
         DATABASE_URL: ${DATABASE_URL}
-    image: websocket-quick-start-web:latest
-    container_name: websocket-quick-start-web
+    image: mountainside-quick-start-web:latest
+    container_name: mountainside-quick-start-web
     expose:
       - 5173
     ports:
@@ -24,8 +24,8 @@ services:
       dockerfile: ./apps/server/Dockerfile.build
       args:
         DATABASE_URL: ${DATABASE_URL}
-    image: websocket-quick-start-server:latest
-    container_name: websocket-quick-start-server
+    image: mountainside-quick-start-server:latest
+    container_name: mountainside-quick-start-server
     expose:
       - 3000
     ports:
@@ -43,8 +43,8 @@ services:
       dockerfile: ./apps/ws/Dockerfile.build
       args:
         DATABASE_URL: ${DATABASE_URL}
-    image: websocket-quick-start-ws:latest
-    container_name: websocket-quick-start-ws
+    image: mountainside-quick-start-ws:latest
+    container_name: mountainside-quick-start-ws
     expose:
       - 8080
     ports:

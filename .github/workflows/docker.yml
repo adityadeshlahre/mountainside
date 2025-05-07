@@ -36,23 +36,23 @@ jobs:
 
       - name: Push web service image
         run: |
-          docker tag websocket-quick-start-web:latest ${{ secrets.DOCKERHUB_USERNAME }}/websocket-quick-start-web:latest
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/websocket-quick-start-web:latest
+          docker tag mountainside-quick-start-web:latest ${{ secrets.DOCKERHUB_USERNAME }}/mountainside-quick-start-web:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/mountainside-quick-start-web:latest
 
       - name: Push server service image
         run: |
-          docker tag websocket-quick-start-server:latest ${{ secrets.DOCKERHUB_USERNAME }}/websocket-quick-start-server:latest
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/websocket-quick-start-server:latest
+          docker tag mountainside-quick-start-server:latest ${{ secrets.DOCKERHUB_USERNAME }}/mountainside-quick-start-server:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/mountainside-quick-start-server:latest
 
       - name: Push ws service image
         run: |
-          docker tag websocket-quick-start-ws:latest ${{ secrets.DOCKERHUB_USERNAME }}/websocket-quick-start-ws:latest
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/websocket-quick-start-ws:latest
+          docker tag mountainside-quick-start-ws:latest ${{ secrets.DOCKERHUB_USERNAME }}/mountainside-quick-start-ws:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/mountainside-quick-start-ws:latest
 
       - name: Push full web-server image
         run: |
-          docker tag websocket-quick-start-full:latest ${{ secrets.DOCKERHUB_USERNAME }}/websocket-quick-start-full:latest
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/websocket-quick-start-full:latest
+          docker tag mountainside-quick-start-full:latest ${{ secrets.DOCKERHUB_USERNAME }}/mountainside-quick-start-full:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/mountainside-quick-start-full:latest
 
   render_deploy:
     name: Deploy to render
