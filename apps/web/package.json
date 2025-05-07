@@ -11,7 +11,7 @@
   "dependencies": {
     "@repo/types": "workspace:*",
     "@repo/ui": "workspace:*",
-    "axios": "^1.8.4",
+    "axios": "^1.9.0",
     "idb": "^8.0.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
