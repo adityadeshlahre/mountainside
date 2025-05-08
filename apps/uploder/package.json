@@ -10,18 +10,23 @@
     "lint": "eslint src/"
   },
   "devDependencies": {
+    "@eslint/compat": "^1.2.9",
+    "@eslint/eslintrc": "^3.3.1",
+    "@eslint/js": "^9.26.0",
     "@repo/eslint-config": "workspace:*",
     "@repo/types": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@types/node": "^22.13.14",
-    "esbuild": "^0.25.1",
-    "eslint": "^9.23.0",
     "@typescript-eslint/eslint-plugin": "^8.28.0",
     "@typescript-eslint/parser": "^8.28.0",
+    "esbuild": "^0.25.1",
+    "eslint": "^9.23.0",
+    "globals": "^16.1.0",
+    "nodemon": "^3.1.0",
+    "rimraf": "^5.0.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.2",
-    "nodemon": "^3.1.0",
-    "rimraf": "^5.0.1"
+    "typescript-eslint": "^8.32.0"
   },
   "dependencies": {
     "axios": "^1.8.4",

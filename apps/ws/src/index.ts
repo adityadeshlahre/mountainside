@@ -8,7 +8,7 @@ const wss = new WebSocketServer({ port: 8080 });
 const roomMap: RoomMap = new Map();
 
 wss.on("connection", (ws: WebSocket) => {
-  let currentRoomRef = { current: null };
+  const currentRoomRef = { current: null };
 
   ws.on("error", (err) => {
     console.error("WebSocket error", err);

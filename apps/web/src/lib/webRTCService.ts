@@ -13,6 +13,13 @@ const mediaConstraints = {
   audio: true,
 };
 
+const configuration = {
+  iceServers: [
+    { urls: "stun:stun.l.google.com:19302" },
+    { urls: "stun:stun1.l.google.com:19302" },
+  ],
+};
+
 export const useWebRTC = () => {
   const { socket, loading } = useSocket();
 
@@ -37,7 +44,7 @@ export const useWebRTC = () => {
       localVideo.srcObject = localStream;
 
       // Create peer connection
-      peerConnection = new RTCPeerConnection();
+      peerConnection = new RTCPeerConnection(configuration);
 
       // Send ICE candidates as they are found
       peerConnection.onicecandidate = (event: any) => {

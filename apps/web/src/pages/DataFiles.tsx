@@ -22,6 +22,15 @@ const DataFiles = () => {
         setLoading(false);
       });
   }, [sessionId]);
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center gap-3">
+        <div className="text-5xl">Loading...</div>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="flex flex-col items-center gap-3">

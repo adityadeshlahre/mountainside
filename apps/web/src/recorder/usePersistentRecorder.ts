@@ -8,7 +8,6 @@ const usePersistentRecorder = (
   mediaStream: MediaStream | null,
   sessionId: string
 ) => {
-  const recorderRef = useRef<MediaRecorder | null>(null);
   const [isRecording, setIsRecording] = useState(false);
   const CHUNK_DURATION = 5000;
   const timerRef = useRef<NodeJS.Timeout | null>(null);

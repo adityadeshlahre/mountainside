@@ -27,6 +27,7 @@ export default [
       'no-console': 'warn',
       "@typescript-eslint/no-explicit-any" : "warn",
       'no-unused-vars': 'off',
+      '@typescript-eslint/no-explicit-any' : 'warn',
       '@typescript-eslint/no-unused-vars': [
         'warn',
         { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },

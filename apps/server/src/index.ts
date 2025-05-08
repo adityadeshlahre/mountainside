@@ -6,10 +6,6 @@ import path from "path";
 import { User, UserSchema } from "@repo/types";
 import { prisma } from "@repo/db";
 import { updload } from "./multer/multer.middleware";
-import { spawn } from "child_process";
-import { uploadOnCloudinary } from "./utils/cloudinary";
-import pLimit from "p-limit";
-import { uploadFileToAlbumCatbox } from "./utils/catbox";
 import {
   getAllFiles,
   getAllFolders,
