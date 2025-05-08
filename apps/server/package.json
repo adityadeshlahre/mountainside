@@ -33,8 +33,12 @@
   },
   "dependencies": {
     "@repo/db": "workspace:*",
+    "catbox.moe": "^1.0.2",
     "cloudinary": "^2.6.1",
     "dotenv": "^16.4.7",
-    "multer": "1.4.5-lts.2"
+    "imagekit": "^6.0.0",
+    "multer": "1.4.5-lts.2",
+    "node-catbox": "^3.3.0",
+    "p-limit": "^6.2.0"
   }
 }

@@ -10,9 +10,12 @@ const usePersistentRecorder = (
 ) => {
   const recorderRef = useRef<MediaRecorder | null>(null);
   const [isRecording, setIsRecording] = useState(false);
-
+  const CHUNK_DURATION = 5000;
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const isRecordingRef = useRef(false);
   const startRecording = async () => {
     if (!mediaStream) return;
+
     const db = await openDB(DB_NAME, 2, {
       upgrade(db) {
         if (!db.objectStoreNames.contains(STORE_NAME)) {
@@ -25,32 +28,57 @@ const usePersistentRecorder = (
       },
     });
 
-    const recorder = new MediaRecorder(mediaStream, {
-      mimeType: "video/webm; codecs=vp9",
-      videoBitsPerSecond: 5_000_000, // Full HD bitrate
-    });
+    setIsRecording(true);
+    isRecordingRef.current = true;
 
-    recorder.ondataavailable = async (event) => {
-      if (event.data.size > 0) {
-        const tx = db.transaction(STORE_NAME, "readwrite");
-        const store = tx.objectStore(STORE_NAME);
-        await store.add({
-          sessionId,
-          chunk: event.data,
-          timestamp: Date.now(),
-        });
-        await tx.done;
-      }
+    const recordNextChunk = async () => {
+      if (!isRecordingRef.current) return;
+
+      const recorder = new MediaRecorder(mediaStream, {
+        mimeType: "video/webm; codecs=vp8,opus",
+        audioBitsPerSecond: 128_000,
+        videoBitsPerSecond: 5_000_000,
+      });
+
+      recorder.ondataavailable = async (event) => {
+        if (event.data.size > 0) {
+          const tx = db.transaction(STORE_NAME, "readwrite");
+          const store = tx.objectStore(STORE_NAME);
+          await store.add({
+            sessionId,
+            chunk: event.data,
+            timestamp: Date.now(),
+            meta: {
+              mimeType: recorder.mimeType,
+              duration: CHUNK_DURATION,
+            },
+          });
+          await tx.done;
+          console.log("Chunk saved");
+        }
+      };
+
+      recorder.onstop = async () => {
+        if (isRecordingRef.current) {
+          setTimeout(recordNextChunk, 0);
+        }
+      };
+
+      recorder.start();
+      timerRef.current = setTimeout(() => {
+        if (recorder.state === "recording") {
+          recorder.stop();
+        }
+      }, CHUNK_DURATION);
     };
 
-    recorder.start(4000); // every 5s
-    recorderRef.current = recorder;
-    setIsRecording(true);
+    recordNextChunk();
   };
 
   const stopRecording = () => {
-    recorderRef.current?.stop();
+    isRecordingRef.current = false;
     setIsRecording(false);
+    if (timerRef.current) clearTimeout(timerRef.current);
   };
 
   const exportChunks = async () => {

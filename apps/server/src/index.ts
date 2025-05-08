@@ -6,8 +6,15 @@ import path from "path";
 import { User, UserSchema } from "@repo/types";
 import { prisma } from "@repo/db";
 import { updload } from "./multer/multer.middleware";
+import { spawn } from "child_process";
 import { uploadOnCloudinary } from "./utils/cloudinary";
-
+import pLimit from "p-limit";
+import { uploadFileToAlbumCatbox } from "./utils/catbox";
+import {
+  getAllFiles,
+  getAllFolders,
+  uploadMultipleFiles,
+} from "./utils/imagekit";
 const app = express();
 const port = process.env.PORT || 3000;
 app.use(cors());
@@ -96,7 +103,6 @@ app.post(
   async (req: express.Request, res: express.Response): Promise<any> => {
     try {
       const { sessionId } = req.body;
-      console.log("sessionId", sessionId);
 
       if (!sessionId) {
         return res.status(400).json({ error: "Missing sessionId" });
@@ -105,9 +111,12 @@ app.post(
       const videoDir = path.join(__dirname, "./videos/");
       const files = fs.readdirSync(videoDir);
 
-      const sessionChunks = files.filter((file) =>
-        file.includes(`chunk-${sessionId}`)
-      );
+      const sessionChunks = files
+        .filter(
+          (file) =>
+            file.includes(`chunk-${sessionId}`) && file.endsWith(".webm")
+        )
+        .sort();
 
       if (sessionChunks.length === 0) {
         return res
@@ -115,21 +124,13 @@ app.post(
           .json({ error: "No chunks found for this session" });
       }
 
-      const results = [];
+      const fullPaths: string[] = sessionChunks.map((filename) =>
+        path.join(videoDir, filename)
+      );
 
-      const uploadPromises = sessionChunks.map(async (filename) => {
-        const fullPath = path.join(videoDir, filename);
-        if (!fs.existsSync(fullPath)) {
-          console.warn(`File does not exist: ${fullPath}`);
-          return null;
-        }
-        const uploadResult = await uploadOnCloudinary(fullPath, sessionId);
-        return { filename, uploadResult };
-      });
+      const results = await uploadMultipleFiles(fullPaths, sessionId);
 
-      const uploadResults = await Promise.all(uploadPromises);
-      results.push(...uploadResults.filter((result) => result !== null));
-
+      console.log("results", results);
       res.status(200).json({
         message: "File uploaded successfully",
         cloudinary: results,
@@ -137,6 +138,46 @@ app.post(
     } catch (error) {
       console.log(error);
       res.status(500).json({ error: "Error uploading file" });
+    }
+  }
+);
+
+app.get(
+  "/api/allfolders",
+  async (req: express.Request, res: express.Response): Promise<any> => {
+    try {
+      const results = await getAllFolders();
+
+      res.status(200).json({
+        message: "File uploaded successfully",
+        dir: results,
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: "Error fetching folders" });
+    }
+  }
+);
+
+app.get(
+  "/api/:sessionId",
+  async (req: express.Request, res: express.Response): Promise<any> => {
+    try {
+      const { sessionId } = req.params;
+
+      if (!sessionId) {
+        return res.status(400).json({ error: "Missing sessionId" });
+      }
+
+      const results = await getAllFiles(sessionId);
+
+      res.status(200).json({
+        message: "File uploaded successfully",
+        dirFiles: results,
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: "Error fetching files inside folders" });
     }
   }
 );

@@ -1,7 +1,7 @@
 {
   "extends": "@repo/typescript-config/base.json",
   "exclude": ["node_modules", "dist"],
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "src/utils/imagekit.ts"],
   "compilerOptions": {
     "lib": ["ES2015"],
     "rootDir": "./src",

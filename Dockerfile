@@ -33,7 +33,7 @@ COPY turbo.json turbo.json
 
 RUN pnpm install
 
-RUN pnpm turbo run build --filter=server --filter=web
+RUN pnpm turbo run build --filter=server --filter=web --filter=ws
 
 FROM base AS runner
 
