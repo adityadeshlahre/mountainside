@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
-    "@types/node": "^22.15.14",
+    "@types/node": "^22.15.17",
     "prisma": "^6.7.0"
   },
   "exports": {
