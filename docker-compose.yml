@@ -8,12 +8,15 @@ services:
     expose:
       - 3000
       - 5173
+      - 8080
     ports:
       - "3000:3000"
       - "5173:5173"
+      - "8080:8080"
     volumes:
       - ./apps/web/:/app/apps/web
       - ./apps/server/:/app/apps/server
+      - ./apps/ws/:/app/apps/ws
     environment:
       - DATABASE_URL=${DATABASE_URL}
       - PORT=${PORT}

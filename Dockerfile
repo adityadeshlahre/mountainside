@@ -12,7 +12,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN turbo prune --scope=server --scope=web --docker
+RUN turbo prune --scope=server --scope=web --scope=ws --docker
 
 FROM base AS installer
 
