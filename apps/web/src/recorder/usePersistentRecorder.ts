@@ -16,7 +16,7 @@ const usePersistentRecorder = (
     if (!mediaStream) return;
 
     const db = await openDB(DB_NAME, 2, {
-      upgrade(db) {
+      upgrade(db : any) {
         if (!db.objectStoreNames.contains(STORE_NAME)) {
           const store = db.createObjectStore(STORE_NAME, {
             keyPath: "id",

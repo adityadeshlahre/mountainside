@@ -1,9 +1,12 @@
-## quick ts starter
+## websocket + quick ts starter
 
 This is my personal prefered stack for for starting simple full stack projects in one go. Initalized with turborepo in furhter i have added all the stacks along the way.
 
 > [!IMPORTANT]  
 > This is using `pnpm` as package manager.
+
+> [WebSocket:URL]
+> wss://websocket-quick-start-ws.onrender.com
 
 ### Tech Stack
 
@@ -16,6 +19,10 @@ This is my personal prefered stack for for starting simple full stack projects i
 - [x] Zod
 
 ### Insider
+
+```
+"apps/ws" this ws(websocket) folder is initializes using npm and tsc [websocket server]
+```
 
 ```
 "apps/web" this web(react app) folder is initializes using VITE [backedn]
