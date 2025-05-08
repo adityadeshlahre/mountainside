@@ -35,7 +35,7 @@
     "@repo/db": "workspace:*",
     "catbox.moe": "^1.0.2",
     "cloudinary": "^2.6.1",
-    "dotenv": "^16.4.7",
+    "dotenv": "^16.5.0",
     "imagekit": "^6.0.0",
     "multer": "1.4.5-lts.2",
     "node-catbox": "^3.3.0",
