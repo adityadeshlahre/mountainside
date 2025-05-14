@@ -1,3 +1,7 @@
+## Demo Video
+
+https://github.com/user-attachments/assets/20f0e56a-545c-4899-96ec-0487880e37aa
+
 ## websocket + quick ts starter
 
 This is my personal prefered stack for for starting simple full stack projects in one go. Initalized with turborepo in furhter i have added all the stacks along the way.
